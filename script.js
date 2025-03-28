@@ -156,3 +156,9 @@ function restartGame(){
   
 
 
+// Add event listener to allow adding tasks by pressing Enter
+document.getElementById("letterInput").addEventListener("keyup", function (event) {
+  if (event.key === "Enter") {
+      guessLetter();
+  }
+});
