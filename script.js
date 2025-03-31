@@ -43,6 +43,8 @@ const wordList = [
     document.getElementById('difficultySelection').classList.add('d-none')
     //Auto-focus on input
     document.getElementById('letterInput').focus()
+
+    document.getElementById("mainHeader").remove();
   }
   
   function getRandomWord (level) {
@@ -162,3 +164,4 @@ document.getElementById("letterInput").addEventListener("keyup", function (event
       guessLetter();
   }
 });
+
