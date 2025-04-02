@@ -142,26 +142,40 @@ const wordList = [
   
   }
   
-function endGame(isWin){
+  function endGame(isWin) {
+    let messageBox = document.createElement("div");
+    messageBox.id = "gameMessage";
+    messageBox.classList.add("alert", "mt-3", "fw-bold");
+    
     if (isWin) {
-        alert('Congratulations! You have guessed the correct word!')
+        messageBox.textContent = "Congratulations! You have guessed the correct word!";
+        messageBox.classList.add("alert-success");
+    } else {
+        messageBox.textContent = "You guessed wrong, the word was " + selectedWord + "!";
+        messageBox.classList.add("alert-danger");
     }
-    else {
-        alert("You guessed wrong, the word is " + selectedWord);
+    
+    let gameArea = document.getElementById("gameArea");
+    let existingMessage = document.getElementById("gameMessage");
+    if (existingMessage) {
+        existingMessage.remove();
     }
+    
+    gameArea.appendChild(messageBox);
 }
+
 
 
 function restartGame(){
     location.reload()
 }
   
-
-
 // Add event listener to allow adding tasks by pressing Enter
 document.getElementById("letterInput").addEventListener("keyup", function (event) {
   if (event.key === "Enter") {
       guessLetter();
   }
 });
+
+
 
