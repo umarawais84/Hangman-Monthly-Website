@@ -21,35 +21,62 @@
 
     <body>
         
-        <main class="container text-center">
-            <h1 class="mb-4" id="mainHeader">Shamrock Hangman</h1>
-
-            <div id="difficultySelection"> <!--REMOVE THIS d-none-->
-                <h3>Select Difficulty</h3>
-                <button class="btn btn-success difficulty-btn" id="ez" onclick="startGame('easy')">Easy</button>
-                <button class="btn btn-warning difficulty-btn" id="md" onclick="startGame('medium')">Medium</button>
-                <button class="btn btn-danger difficulty-btn" id="hd" onclick="startGame('hard')">Hard</button>
+        <main class="container py-4">
+            <div class="row justify-content-center">
+                <div class="col-12 text-center">
+                    <h1 class="mb-4" id="mainHeader">Shamrock Hangman</h1>
+                </div>
             </div>
 
-            <div id="difficultyBox" class="mt-3 p-3 fw-bold d-none"></div> 
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-6">
+                    <div id="difficultySelection" class="text-center">
+                        <h3>Select Difficulty</h3>
+                        <div class="d-flex justify-content-center gap-2">
+                            <button class="btn btn-success difficulty-btn" id="ez" onclick="startGame('easy')">Easy</button>
+                            <button class="btn btn-warning difficulty-btn" id="md" onclick="startGame('medium')">Medium</button>
+                            <button class="btn btn-danger difficulty-btn" id="hd" onclick="startGame('hard')">Hard</button>
+                        </div>
+                    </div>
 
-            <div id="gameArea" class="mt-4 d-none gameArea">
-                <h1 class="mb-4">Shamrock Hangman</h1>
-                <h2 id="wordDisplay" class="mb-3">_ _ _ _ _</h2>
+                    <div id="difficultyBox" class="mt-3 p-3 fw-bold d-none text-center"></div>
 
-                <div class="mb-3">
-                    <input type="text" id="letterInput" maxlength="1" class="form-control d-inline-block w-auto" placeholder="Enter a Letter">
-                    <button id="guessBtn" class="btn btn-warning" onclick="guessLetter()">Guess</button>
+                    <div id="gameArea" class="mt-4 d-none gameArea">
+                        <div class="row g-3">
+                            <div class="col-12 text-center">
+                                <h1 class="mb-4">Shamrock Hangman</h1>
+                                <h2 id="wordDisplay" class="mb-3">_ _ _ _ _</h2>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="d-flex justify-content-center gap-2">
+                                    <input type="text" id="letterInput" maxlength="1" class="form-control w-auto" placeholder="Enter a Letter">
+                                    <button id="guessBtn" class="btn btn-warning" onclick="guessLetter()">Guess</button>
+                                </div>
+                            </div>
+
+                            <div class="col-12 text-center">
+                                <div class="score-tracker mb-3">
+                                    <span class="badge bg-success me-2">Wins: <span id="winsCount">0</span></span>
+                                    <span class="badge bg-danger">Losses: <span id="lossesCount">0</span></span>
+                                </div>
+                                <p id="wrongLetters" class="fw-bold text-danger">Wrong Guesses: </p>
+                                <div id="wordGraveyard" class="mt-3">
+                                    <h4 class="text-light">Word Graveyard</h4>
+                                    <p id="guessedWords" class="text-light"></p>
+                                </div>
+                            </div>
+
+                            <div class="col-12 text-center">
+                                <img src="imgs/6-coins.jpg" alt="" id="shamrock" class="img-fluid shamrock-img">
+                            </div>
+
+                            <div class="col-12 text-center">
+                                <button id="restartBtn" class="btn btn-danger" onclick="restartGame()">Restart Game</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-                <p id="wrongLetters" class="fw-bold text-danger">Wrong Guesses: </p>
-
-                <img src="imgs/6-coins.jpg" alt="" id="shamrock" class="shamrock-img">
-
-                <div class="mt-4">
-                    <button id="restartBtn" class="btn btn-danger" onclick="restartGame()">Restart Game</button>
-                </div>
-
             </div>
         </main>
         <footer>

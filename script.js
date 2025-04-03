@@ -9,16 +9,20 @@ const wordList = [
   'leprechaun',
   'treasure',
   'celebration',
-  'greenery',
+'greenery',
   'shenanigans',
-  'tradition'
+'tradition'
 ]
 
-//decare variables
+//declare variables
+
+
 let selectedWord = ''
 let displayedWord = ''
 let wrongGuesses = 0
 let guessedLetters = []
+let wins = 0
+let losses = 0
 const maxMistakes = 6
 
 // Start Game Function (runs everything)
@@ -29,13 +33,13 @@ function startGame (level) {
 
   // Set initial image to 6 coins
   document.getElementById('shamrock').src = 'imgs/6-coins.jpg'
-  
+
   selectedWord = getRandomWord(level)
   displayedWord = '_'.repeat(selectedWord.length)
 
   updateDifficultyDisplay(level)
   updateUI()
-  
+
   //Show Game Area/Difficulty Display , hide selection buttons
   document.getElementById('gameArea').classList.remove('d-none')
   document.getElementById('gameArea').classList.add('d-block')
@@ -75,7 +79,6 @@ function updateDifficultyDisplay (level) {
     difficultyBox.classList.add('hard')
   }
 }
-
 function updateUI() {
   document.getElementById('wordDisplay').textContent = displayedWord.split('').join('  ') // Show word progress with spaces
 }
@@ -84,17 +87,36 @@ function guessLetter () {
   let inputField = document.getElementById('letterInput') // Get input field
   let guessedLetter = inputField.value.toLowerCase() // Convert input to lowercase
 
+  function showCustomAlert(message, type) {
+      const alertDiv = document.createElement('div');
+      alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+      alertDiv.setAttribute('role', 'alert');
+      alertDiv.innerHTML = `
+          ${message}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      `;
+
+                                                                                                                                  // Insert alert before the game area
+      const gameArea = document.getElementById('gameArea');
+      gameArea.parentNode.insertBefore(alertDiv, gameArea);
+
+      // Auto-dismiss after 3 seconds
+      setTimeout(() => {
+          alertDiv.remove();
+      }, 3000);
+  }
+
   //Check if input is a valid letter (A-Z)
   if (!guessedLetter.match(/^[a-z]$/)){
-    alert('Please enter a valid letter (A-Z)!') // Alert user if invalid input
+    showCustomAlert('Please enter a valid letter (A-Z)!', 'warning')
     inputField.value = '' // Clear input field
     return // Exit function
   }
-  
+
 
   //Check if letter was already guessed
   if(guessedLetters.includes(guessedLetter)){
-    alert(`You already guessed '${guessedLetter}'. Try a different letter!`)
+    showCustomAlert(`You already guessed '${guessedLetter}'. Try a different letter!`, 'info')
     inputField.value = '' // Clear input field
     return
   }
@@ -122,16 +144,20 @@ function playSound(correct) {
 function updateWrongGuess(guessedLetter){ 
   wrongGuesses++
   document.getElementById('wrongLetters').textContent += `${guessedLetter}`
-  
+
   // Update image based on wrong guesses
   const imageNames = ['6-coins.jpg', '5-coins.webp', '4-coins.jpg', '3-coins.jpg', '2-coins.jpg', '1-coin.jpg'];
   const imageIndex = wrongGuesses;
   document.getElementById('shamrock').src = `imgs/${imageNames[imageIndex]}`;
-  
-  playSound(false);
 
-  if (wrongGuesses === maxMistakes){
-    endGame(false)
+  playSound(false);
+  updateUI(); // Update UI to reflect change
+
+  if (wrongGuesses >= maxMistakes){
+    endGame(false);
+    document.getElementById('letterInput').disabled = true;
+    document.getElementById('guessBtn').disabled = true;
+    return;
   }
 }
 
@@ -158,24 +184,34 @@ function updateCorrectGuess(guessedLetter){
 }
 
 function endGame(isWin) {
+  // Update score
+  if (isWin) {
+      wins++;
+      document.getElementById('winsCount').textContent = wins;
+  } else {
+      losses++;
+      document.getElementById('lossesCount').textContent = losses;
+  }
+
   let messageBox = document.createElement("div");
   messageBox.id = "gameMessage";
   messageBox.classList.add("alert", "mt-3", "fw-bold");
-  
+
   if (isWin) {
       messageBox.textContent = "Congratulations! You have guessed the correct word!";
       messageBox.classList.add("alert-success");
   } else {
       messageBox.textContent = "You guessed wrong, the word was " + selectedWord + "!";
       messageBox.classList.add("alert-danger");
+      document.getElementById('shamrock').src = 'imgs/X.jpg';
   }
-  
+
   let gameArea = document.getElementById("gameArea");
   let existingMessage = document.getElementById("gameMessage");
   if (existingMessage) {
       existingMessage.remove();
   }
-  
+
   gameArea.appendChild(messageBox);
 }
 
@@ -186,23 +222,36 @@ function restartGame(){
   wrongGuesses = 0
   guessedLetters = []
   document.getElementById('wrongLetters').textContent = "Wrong Guesses: "
-  
+
+  // Re-enable input and button
+  document.getElementById('letterInput').disabled = false
+  document.getElementById('guessBtn').disabled = false
+
   // Hide game area and message
   document.getElementById('gameArea').classList.add('d-none')
   document.getElementById('difficultyBox').classList.add('d-none')
-  
+
   // Show difficulty selection
   document.getElementById('difficultySelection').classList.remove('d-none')
-  
+
   // Recreate main header if it was removed
   if (!document.getElementById('mainHeader')) {
+      const headerRow = document.createElement('div')
+      headerRow.className = 'row justify-content-center'
+
+      const headerCol = document.createElement('div')
+      headerCol.className = 'col-12 text-center'
+
       const header = document.createElement('h1')
       header.id = 'mainHeader'
       header.className = 'mb-4'
       header.textContent = 'Shamrock Hangman'
-      document.querySelector('main').prepend(header)
+
+      headerCol.appendChild(header)
+      headerRow.appendChild(headerCol)
+      document.querySelector('main').prepend(headerRow)
   }
-  
+
   // Remove end game message if it exists
   const gameMessage = document.getElementById('gameMessage')
   if (gameMessage) {
@@ -216,5 +265,3 @@ if (event.key === "Enter") {
     guessLetter();
 }
 });
-
-
