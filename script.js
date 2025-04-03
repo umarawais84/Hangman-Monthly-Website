@@ -96,7 +96,7 @@ function guessLetter () {
           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       `;
 
-                                                                                                                                  // Insert alert before the game area
+           // Insert alert before the game area
       const gameArea = document.getElementById('gameArea');
       gameArea.parentNode.insertBefore(alertDiv, gameArea);
 
@@ -216,7 +216,6 @@ function endGame(isWin) {
 }
 
 
-
 function restartGame(){
   // Reset game state
   wrongGuesses = 0
@@ -265,3 +264,4 @@ if (event.key === "Enter") {
     guessLetter();
 }
 });
+
