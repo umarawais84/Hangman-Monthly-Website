@@ -1,4 +1,3 @@
-
 // Word List
 const wordList = [
   'gold',
@@ -28,6 +27,9 @@ function startGame (level) {
   wrongGuesses = 0
   guessedLetters = []
 
+  // Set initial image to 6 coins
+  document.getElementById('shamrock').src = 'imgs/6-coins.jpg'
+  
   selectedWord = getRandomWord(level)
   displayedWord = '_'.repeat(selectedWord.length)
 
@@ -120,7 +122,12 @@ function playSound(correct) {
 function updateWrongGuess(guessedLetter){ 
   wrongGuesses++
   document.getElementById('wrongLetters').textContent += `${guessedLetter}`
-  //document.getElementById('shamrock').src = `imgs/shamrock${6-wrongGuesses}.jpg`
+  
+  // Update image based on wrong guesses
+  const imageNames = ['6-coins.jpg', '5-coins.webp', '4-coins.jpg', '3-coins.jpg', '2-coins.jpg', '1-coin.jpg'];
+  const imageIndex = wrongGuesses;
+  document.getElementById('shamrock').src = `imgs/${imageNames[imageIndex]}`;
+  
   playSound(false);
 
   if (wrongGuesses === maxMistakes){
