@@ -1,181 +1,213 @@
+
 // Word List
 const wordList = [
-    'gold',
-    'luck',
-    'clover',
-    'rain',
-    'charm',
-    'parade',
-    'leprechaun',
-    'treasure',
-    'celebration',
-    'greenery',
-    'shenanigans',
-    'tradition'
-  ]
-  
-  //decare variables
-  let selectedWord = ''
-  let displayedWord = ''
-  let wrongGuesses = 0
-  let guessedLetters = []
-  const maxMistakes = 6
-  
-  // Start Game Function (runs everything)
-  function startGame (level) {
-    //reset game
-    wrongGuesses = 0
-    guessedLetters = []
-  
-    selectedWord = getRandomWord(level)
-    displayedWord = '_'.repeat(selectedWord.length)
-  
-    updateDifficultyDisplay(level)
-    updateUI()
-    
-    //Show Game Area/Difficulty Display , hide selection buttons
-    document.getElementById('gameArea').classList.remove('d-none')
-    document.getElementById('gameArea').classList.add('d-block')
-  
-    document.getElementById('difficultyBox').classList.remove('d-none')
-    document.getElementById('difficultyBox').classList.add('d-block')
-  
-    document.getElementById('difficultySelection').classList.add('d-none')
-    //Auto-focus on input
-    document.getElementById('letterInput').focus()
+  'gold',
+  'luck',
+  'clover',
+  'rain',
+  'charm',
+  'parade',
+  'leprechaun',
+  'treasure',
+  'celebration',
+  'greenery',
+  'shenanigans',
+  'tradition'
+]
 
-    document.getElementById("mainHeader").remove();
+//decare variables
+let selectedWord = ''
+let displayedWord = ''
+let wrongGuesses = 0
+let guessedLetters = []
+const maxMistakes = 6
+
+// Start Game Function (runs everything)
+function startGame (level) {
+  //reset game
+  wrongGuesses = 0
+  guessedLetters = []
+
+  selectedWord = getRandomWord(level)
+  displayedWord = '_'.repeat(selectedWord.length)
+
+  updateDifficultyDisplay(level)
+  updateUI()
+  
+  //Show Game Area/Difficulty Display , hide selection buttons
+  document.getElementById('gameArea').classList.remove('d-none')
+  document.getElementById('gameArea').classList.add('d-block')
+
+  document.getElementById('difficultyBox').classList.remove('d-none')
+  document.getElementById('difficultyBox').classList.add('d-block')
+
+  document.getElementById('difficultySelection').classList.add('d-none')
+  //Auto-focus on input
+  document.getElementById('letterInput').focus()
+
+  document.getElementById("mainHeader").remove();
+}
+
+function getRandomWord (level) {
+  let filteredWords = wordList.filter(word => {
+    if (level === 'easy') return word.length <= 4
+    if (level === 'medium') return word.length >= 5 && word.length <= 7
+    if (level === 'hard') return word.length >= 8
+  })
+  return filteredWords[Math.floor(Math.random() * filteredWords.length)]
+}
+
+//update Difficulty Display
+function updateDifficultyDisplay (level) {
+  let difficultyBox = document.getElementById('difficultyBox')
+  difficultyBox.classList.remove('easy', 'medium', 'hard')
+
+  if (level === 'easy') {
+    difficultyBox.textContent = 'Difficulty: Easy 🍀'
+    difficultyBox.classList.add('easy')
+  } else if (level === 'medium') {
+    difficultyBox.textContent = 'Difficulty: Medium 🌟'
+    difficultyBox.classList.add('medium')
+  } else if (level === 'hard') {
+    difficultyBox.textContent = 'Difficulty: Hard 💀'
+    difficultyBox.classList.add('hard')
   }
-  
-  function getRandomWord (level) {
-    let filteredWords = wordList.filter(word => {
-      if (level === 'easy') return word.length <= 4
-      if (level === 'medium') return word.length >= 5 && word.length <= 7
-      if (level === 'hard') return word.length >= 8
-    })
-    return filteredWords[Math.floor(Math.random() * filteredWords.length)]
-  }
-  
-  //update Difficulty Display
-  function updateDifficultyDisplay (level) {
-    let difficultyBox = document.getElementById('difficultyBox')
-    difficultyBox.classList.remove('easy', 'medium', 'hard')
-  
-    if (level === 'easy') {
-      difficultyBox.textContent = 'Difficulty: Easy 🍀'
-      difficultyBox.classList.add('easy')
-    } else if (level === 'medium') {
-      difficultyBox.textContent = 'Difficulty: Medium 🌟'
-      difficultyBox.classList.add('medium')
-    } else if (level === 'hard') {
-      difficultyBox.textContent = 'Difficulty: Hard 💀'
-      difficultyBox.classList.add('hard')
-    }
-  }
-  
-  function updateUI() {
-    document.getElementById('wordDisplay').textContent = displayedWord.split('').join('  ') // Show word progress with spaces
-  }
-  
-  function guessLetter () {
-    let inputField = document.getElementById('letterInput') // Get input field
-    let guessedLetter = inputField.value.toLowerCase() // Convert input to lowercase
-  
-    //Check if input is a valid letter (A-Z)
-    if (!guessedLetter.match(/^[a-z]$/)){
-      alert('Please enter a valid letter (A-Z)!') // Alert user if invalid input
-      inputField.value = '' // Clear input field
-      return // Exit function
-    }
-    
-  
-    //Check if letter was already guessed
-    if(guessedLetters.includes(guessedLetter)){
-      alert(`You already guessed '${guessedLetter}'. Try a different letter!`)
-      inputField.value = '' // Clear input field
-      return
-    }
-  
-    //Store guessed letter
-    guessedLetters.push(guessedLetter)
-  
-    //Check if guessed letter is in the selected word
-    if (selectedWord.includes(guessedLetter)){
-      updateCorrectGuess(guessedLetter)
-    } else {
-      updateWrongGuess(guessedLetter)
-    }
-  
+}
+
+function updateUI() {
+  document.getElementById('wordDisplay').textContent = displayedWord.split('').join('  ') // Show word progress with spaces
+}
+
+function guessLetter () {
+  let inputField = document.getElementById('letterInput') // Get input field
+  let guessedLetter = inputField.value.toLowerCase() // Convert input to lowercase
+
+  //Check if input is a valid letter (A-Z)
+  if (!guessedLetter.match(/^[a-z]$/)){
+    alert('Please enter a valid letter (A-Z)!') // Alert user if invalid input
     inputField.value = '' // Clear input field
-    document.getElementById('letterInput').focus() // Refocus input field for next guess
-  
+    return // Exit function
   }
   
-  function updateWrongGuess(guessedLetter){ 
-    wrongGuesses++
-    document.getElementById('wrongLetters').textContent += `${guessedLetter}`
-    //document.getElementById('shamrock').src = `imgs/shamrock${6-wrongGuesses}.jpg`
-  
-    if (wrongGuesses === maxMistakes){
-      endGame(false)
+
+  //Check if letter was already guessed
+  if(guessedLetters.includes(guessedLetter)){
+    alert(`You already guessed '${guessedLetter}'. Try a different letter!`)
+    inputField.value = '' // Clear input field
+    return
+  }
+
+  //Store guessed letter
+  guessedLetters.push(guessedLetter)
+
+  //Check if guessed letter is in the selected word
+  if (selectedWord.includes(guessedLetter)){
+    updateCorrectGuess(guessedLetter)
+  } else {
+    updateWrongGuess(guessedLetter)
+  }
+
+  inputField.value = '' // Clear input field
+  document.getElementById('letterInput').focus() // Refocus input field for next guess
+
+}
+
+function playSound(correct) {
+  const sound = new Audio(correct ? 'Correct.mp3' : 'Wrong.mp3');
+  sound.play();
+}
+
+function updateWrongGuess(guessedLetter){ 
+  wrongGuesses++
+  document.getElementById('wrongLetters').textContent += `${guessedLetter}`
+  //document.getElementById('shamrock').src = `imgs/shamrock${6-wrongGuesses}.jpg`
+  playSound(false);
+
+  if (wrongGuesses === maxMistakes){
+    endGame(false)
+  }
+}
+
+function updateCorrectGuess(guessedLetter){
+  let newDisplayedWord =''
+  playSound(true);
+
+  for (let i=0; i < selectedWord.length; i++){
+    if (selectedWord[i] === guessedLetter){
+      newDisplayedWord += guessedLetter // Replace underscore with correct letter
+    }else{
+    newDisplayedWord += displayedWord[i] // Keep existing correct letters
     }
   }
+
+  displayedWord = newDisplayedWord
+  updateUI()
+
+  //  Check if the player has guessed all letters
+  if (!displayedWord.includes('_')) {
+    endGame(true)
+  }
+
+}
+
+function endGame(isWin) {
+  let messageBox = document.createElement("div");
+  messageBox.id = "gameMessage";
+  messageBox.classList.add("alert", "mt-3", "fw-bold");
   
-  function updateCorrectGuess(guessedLetter){
-    let newDisplayedWord =''
-  
-    for (let i=0; i < selectedWord.length; i++){
-      if (selectedWord[i] === guessedLetter){
-        newDisplayedWord += guessedLetter // Replace underscore with correct letter
-      }else{
-      newDisplayedWord += displayedWord[i] // Keep existing correct letters
-      }
-    }
-  
-    displayedWord = newDisplayedWord
-    updateUI()
-  
-    //  Check if the player has guessed all letters
-    if (!displayedWord.includes('_')) {
-      endGame(true)
-    }
-  
+  if (isWin) {
+      messageBox.textContent = "Congratulations! You have guessed the correct word!";
+      messageBox.classList.add("alert-success");
+  } else {
+      messageBox.textContent = "You guessed wrong, the word was " + selectedWord + "!";
+      messageBox.classList.add("alert-danger");
   }
   
-  function endGame(isWin) {
-    let messageBox = document.createElement("div");
-    messageBox.id = "gameMessage";
-    messageBox.classList.add("alert", "mt-3", "fw-bold");
-    
-    if (isWin) {
-        messageBox.textContent = "Congratulations! You have guessed the correct word!";
-        messageBox.classList.add("alert-success");
-    } else {
-        messageBox.textContent = "You guessed wrong, the word was " + selectedWord + "!";
-        messageBox.classList.add("alert-danger");
-    }
-    
-    let gameArea = document.getElementById("gameArea");
-    let existingMessage = document.getElementById("gameMessage");
-    if (existingMessage) {
-        existingMessage.remove();
-    }
-    
-    gameArea.appendChild(messageBox);
+  let gameArea = document.getElementById("gameArea");
+  let existingMessage = document.getElementById("gameMessage");
+  if (existingMessage) {
+      existingMessage.remove();
+  }
+  
+  gameArea.appendChild(messageBox);
 }
 
 
 
 function restartGame(){
-    location.reload()
-}
+  // Reset game state
+  wrongGuesses = 0
+  guessedLetters = []
+  document.getElementById('wrongLetters').textContent = "Wrong Guesses: "
   
+  // Hide game area and message
+  document.getElementById('gameArea').classList.add('d-none')
+  document.getElementById('difficultyBox').classList.add('d-none')
+  
+  // Show difficulty selection
+  document.getElementById('difficultySelection').classList.remove('d-none')
+  
+  // Recreate main header if it was removed
+  if (!document.getElementById('mainHeader')) {
+      const header = document.createElement('h1')
+      header.id = 'mainHeader'
+      header.className = 'mb-4'
+      header.textContent = 'Shamrock Hangman'
+      document.querySelector('main').prepend(header)
+  }
+  
+  // Remove end game message if it exists
+  const gameMessage = document.getElementById('gameMessage')
+  if (gameMessage) {
+      gameMessage.remove()
+  }
+}
+
 // Add event listener to allow adding tasks by pressing Enter
 document.getElementById("letterInput").addEventListener("keyup", function (event) {
-  if (event.key === "Enter") {
-      guessLetter();
-  }
+if (event.key === "Enter") {
+    guessLetter();
+}
 });
-
 
 
